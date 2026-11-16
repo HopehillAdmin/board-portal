@@ -721,6 +721,7 @@ function renderBreadcrumb(currentPath) {
 function fileIcon(name) {
   const ext = name.split('.').pop().toLowerCase();
   if (ext === 'pdf') return { emoji: '📄', cls: 'icon-pdf' };
+  if (['html','htm'].includes(ext)) return { emoji: '📋', cls: 'icon-file' };
   if (['doc','docx'].includes(ext)) return { emoji: '📝', cls: 'icon-word' };
   if (['xls','xlsx'].includes(ext)) return { emoji: '📊', cls: 'icon-excel' };
   if (['ppt','pptx'].includes(ext)) return { emoji: '📑', cls: 'icon-ppt' };
@@ -779,6 +780,9 @@ function renderItems(folders, files, folderPath, stack) {
     item.href = fileUrl;
     item.target = '_blank';
     item.rel = 'noopener noreferrer';
+    if (/\.html?$/i.test(file.Name)) {
+      item.onclick = e => { e.preventDefault(); openHtmlFile(file); };
+    }
     const size = formatBytes(file.Length);
     const date = formatDate(file.TimeLastModified);
     const meta = [size, date].filter(Boolean).join(' · ');
@@ -791,6 +795,26 @@ function renderItems(folders, files, folderPath, stack) {
       <span class="file-arrow">↗</span>`;
     list.appendChild(item);
   });
+}
+
+// SharePoint forces .html files to download, so fetch the content and show it from this site instead.
+async function openHtmlFile(file) {
+  const win = window.open('', '_blank');
+  if (win) win.document.write('<p style="font-family:sans-serif;padding:24px">Opening ' + escHtml(file.Name) + '…</p>');
+  try {
+    const token = await getAccessToken();
+    const path = encodeURIComponent(file.ServerRelativeUrl.replace(/'/g, "''"));
+    const res = await fetch(`${C.siteUrl}/_api/web/GetFileByServerRelativeUrl('${path}')/$value`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!res.ok) throw new Error(`Could not open file (${res.status})`);
+    const blob = new Blob([await res.arrayBuffer()], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    if (win) win.location.href = url; else window.location.href = url;
+  } catch (e) {
+    if (win) win.close();
+    showListError(e.message);
+  }
 }
 
 function showLoading() {
