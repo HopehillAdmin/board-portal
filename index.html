@@ -87,8 +87,9 @@ body {
 
 /* Header */
 .header {
-  background: var(--brand);
-  color: #fff;
+  background: var(--bg-card);
+  color: var(--fg);
+  border-bottom: 1px solid var(--border);
   padding: 0 max(24px, env(safe-area-inset-left, 0px));
   padding-block: 0;
   display: flex;
@@ -141,20 +142,20 @@ body {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.15);
+  background: var(--tint-strong);
   border: 1.5px solid var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
   font-weight: 600;
-  color: #fff;
+  color: var(--accent-text);
   flex-shrink: 0;
 }
 .btn-ghost {
   background: none;
-  border: 1px solid rgba(255,255,255,0.3);
-  color: #fff;
+  border: 1px solid var(--border);
+  color: var(--fg);
   font-size: 12px;
   font-family: 'Inter', system-ui, sans-serif;
   padding: 5px 12px;
@@ -162,7 +163,7 @@ body {
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
-.btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.5); }
+.btn-ghost:hover { background: var(--tint); border-color: var(--fg-muted); }
 
 /* Main layout */
 .main {
