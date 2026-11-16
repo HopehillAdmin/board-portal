@@ -24,45 +24,51 @@
   --danger-border: var(--danger-border);
   --danger-fg: #991b1b;
   --shadow: 0 1px 3px rgba(17,60,35,0.08), 0 4px 16px rgba(17,60,35,0.06);
+  --logo-panel: #ffffff;
+  --logo-dim: none;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --brand: #0f5c35;
-    --brand-hover: #157043;
-    --accent: #94cd7f;
-    --accent-text: #8ed4a5;
+    --brand: #24543b;
+    --brand-hover: #2d6448;
+    --accent: #8fb39a;
+    --accent-text: #b4cbbb;
     --sky: #9edbed;
-    --bg: #0d1410;
-    --bg-card: #16211a;
-    --fg: #e5eee7;
-    --fg-muted: #94a89b;
-    --border: #253629;
-    --tint: rgba(142,212,165,0.07);
-    --tint-strong: rgba(142,212,165,0.13);
+    --bg: #161a18;
+    --bg-card: #1e2421;
+    --fg: #dde3df;
+    --fg-muted: #98a59d;
+    --border: #2c3430;
+    --tint: rgba(180,203,187,0.06);
+    --tint-strong: rgba(180,203,187,0.11);
     --danger-bg: #2a1414;
     --danger-border: #5c2626;
     --danger-fg: #fca5a5;
+    --logo-panel: #d9dfda;
+    --logo-dim: brightness(0.92);
     --shadow: 0 1px 3px rgba(0,0,0,0.35), 0 4px 16px rgba(0,0,0,0.25);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --brand: #0f5c35;
-  --brand-hover: #157043;
-  --accent: #94cd7f;
-  --accent-text: #8ed4a5;
+  --brand: #24543b;
+  --brand-hover: #2d6448;
+  --accent: #8fb39a;
+  --accent-text: #b4cbbb;
   --sky: #9edbed;
-  --bg: #0d1410;
-  --bg-card: #16211a;
-  --fg: #e5eee7;
-  --fg-muted: #94a89b;
-  --border: #253629;
-  --tint: rgba(142,212,165,0.07);
-  --tint-strong: rgba(142,212,165,0.13);
+  --bg: #161a18;
+  --bg-card: #1e2421;
+  --fg: #dde3df;
+  --fg-muted: #98a59d;
+  --border: #2c3430;
+  --tint: rgba(180,203,187,0.06);
+  --tint-strong: rgba(180,203,187,0.11);
   --danger-bg: #2a1414;
   --danger-border: #5c2626;
   --danger-fg: #fca5a5;
+  --logo-panel: #d9dfda;
+  --logo-dim: brightness(0.92);
   --shadow: 0 1px 3px rgba(0,0,0,0.35), 0 4px 16px rgba(0,0,0,0.25);
   color-scheme: dark;
 }
@@ -99,14 +105,14 @@ body {
   gap: 12px;
 }
 .header-logo {
-  background: #fff;
+  background: var(--logo-panel);
   border-radius: 8px;
   padding: 5px 10px;
   display: flex;
   align-items: center;
   flex-shrink: 0;
 }
-.header-logo img { height: 30px; width: auto; display: block; }
+.header-logo img { height: 30px; width: auto; display: block; filter: var(--logo-dim); }
 .header-title {
   font-family: 'Playfair Display', serif;
   font-size: 17px;
@@ -184,13 +190,13 @@ body {
   text-align: center;
 }
 .signin-emblem {
-  background: #fff;
+  background: var(--logo-panel);
   border-radius: 12px;
   padding: 12px 20px;
   display: inline-block;
   margin: 0 auto 24px;
 }
-.signin-emblem img { width: 220px; max-width: 100%; height: auto; display: block; }
+.signin-emblem img { width: 200px; max-width: 100%; height: auto; display: block; filter: var(--logo-dim); }
 .signin-card h1 {
   font-family: 'Playfair Display', serif;
   font-size: 24px;
