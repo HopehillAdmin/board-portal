@@ -427,10 +427,6 @@ body {
       Sign in with Microsoft
     </button>
     <div id="signinError" class="error-banner" hidden></div>
-    <div class="setup-notice">
-      <strong>Admin setup required:</strong> Register this page's URL as a redirect URI in the Entra app before signing in.<br>
-      <span class="redirect-url" id="redirectUriDisplay">loading…</span>
-    </div>
   </div>
 </div>
 
@@ -458,9 +454,7 @@ const C = {
   scope:          'https://bghomes.sharepoint.com/AllSites.FullControl openid profile offline_access',
 };
 
-// Fixed redirect URI for GitHub Pages
 const REDIRECT_URI = 'https://hopehilladmin.github.io/board-portal/';
-document.getElementById('redirectUriDisplay').textContent = REDIRECT_URI;
 
 // ---- PKCE helpers ----
 function base64url(buf) {
