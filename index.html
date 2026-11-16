@@ -95,7 +95,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  min-height: 64px;
+  gap: 12px;
   position: sticky;
   top: env(safe-area-inset-top, 0px);
   z-index: 10;
@@ -162,6 +163,19 @@ body {
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
+}
+.header-title, .btn-ghost { white-space: nowrap; }
+@media (max-width: 600px) {
+  .header { padding: 0 12px; min-height: 56px; }
+  .header-brand { gap: 10px; min-width: 0; }
+  .header-logo { padding: 4px 8px; }
+  .header-logo img { height: 24px; }
+  .header-title { font-size: 15px; }
+  .header-subtitle { display: none; }
+  .header-actions { gap: 8px; }
+}
+@media (max-width: 400px) {
+  .user-chip { display: none; }
 }
 .btn-ghost:hover { background: var(--tint); border-color: var(--fg-muted); }
 
