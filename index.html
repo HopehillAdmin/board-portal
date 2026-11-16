@@ -1,0 +1,812 @@
+<title>Hope Hill Board Portal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  --navy: #162454;
+  --navy-dark: #0e1a3d;
+  --navy-light: #1e3070;
+  --gold: #BF9B45;
+  --gold-light: #d4b060;
+  --bg: #F8F7F4;
+  --bg-card: #ffffff;
+  --fg: #1a1a2e;
+  --fg-muted: #6b6b8a;
+  --border: #e2e0dc;
+  --shadow: 0 1px 3px rgba(22,36,84,0.08), 0 4px 16px rgba(22,36,84,0.06);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --navy: #2a3f7e;
+    --navy-dark: #1e2f60;
+    --navy-light: #3550a0;
+    --gold: #d4b060;
+    --gold-light: #e8c878;
+    --bg: #0f1221;
+    --bg-card: #1a1f38;
+    --fg: #e8e8f0;
+    --fg-muted: #9090b0;
+    --border: #2a2f50;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --navy: #2a3f7e;
+  --navy-dark: #1e2f60;
+  --navy-light: #3550a0;
+  --gold: #d4b060;
+  --gold-light: #e8c878;
+  --bg: #0f1221;
+  --bg-card: #1a1f38;
+  --fg: #e8e8f0;
+  --fg-muted: #9090b0;
+  --border: #2a2f50;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+
+/* Header */
+.header {
+  background: var(--navy);
+  color: #fff;
+  padding: 0 max(24px, env(safe-area-inset-left, 0px));
+  padding-block: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 10;
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.header-logo {
+  width: 36px;
+  height: 36px;
+  background: var(--gold);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--navy);
+  flex-shrink: 0;
+}
+.header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.header-subtitle {
+  font-size: 11px;
+  opacity: 0.65;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(191,155,69,0.3);
+  border: 1.5px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold-light);
+  flex-shrink: 0;
+}
+.btn-ghost {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  font-size: 12px;
+  font-family: 'Inter', system-ui, sans-serif;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.5); }
+
+/* Main layout */
+.main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-block: 32px;
+}
+
+/* Sign-in screen */
+.signin-screen {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: 48px;
+}
+.signin-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.signin-emblem {
+  width: 72px;
+  height: 72px;
+  background: var(--navy);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--gold);
+  margin: 0 auto 24px;
+}
+.signin-card h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.signin-card p {
+  font-size: 14px;
+  color: var(--fg-muted);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 100%;
+  justify-content: center;
+}
+.btn-primary:hover { background: var(--navy-light); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.ms-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.setup-notice {
+  margin-top: 24px;
+  padding: 14px 16px;
+  background: rgba(191,155,69,0.08);
+  border: 1px solid rgba(191,155,69,0.3);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--fg-muted);
+  text-align: left;
+  line-height: 1.6;
+}
+.setup-notice strong { color: var(--gold); }
+.redirect-url {
+  display: block;
+  word-break: break-all;
+  font-family: monospace;
+  font-size: 11px;
+  margin-top: 4px;
+  color: var(--fg);
+  background: var(--bg);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+/* Error banner */
+.error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  margin-top: 16px;
+  text-align: left;
+  line-height: 1.5;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  color: var(--fg-muted);
+}
+.breadcrumb-item {
+  background: none;
+  border: none;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--navy);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.1s;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.breadcrumb-item:hover { background: rgba(22,36,84,0.08); }
+.breadcrumb-sep { opacity: 0.4; }
+.breadcrumb-current { font-weight: 500; color: var(--fg); text-decoration: none; cursor: default; }
+.breadcrumb-current:hover { background: none; }
+
+/* File browser */
+.browser-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.folder-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--navy);
+}
+.item-count {
+  font-size: 12px;
+  color: var(--fg-muted);
+  margin-top: 2px;
+}
+
+.file-list {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+.file-item:last-child { border-bottom: none; }
+.file-item:hover { background: rgba(22,36,84,0.04); }
+.file-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.icon-folder { background: rgba(22,36,84,0.08); }
+.icon-pdf    { background: rgba(220,38,38,0.08); }
+.icon-word   { background: rgba(37,99,235,0.08); }
+.icon-excel  { background: rgba(21,128,61,0.08); }
+.icon-ppt    { background: rgba(234,88,12,0.08); }
+.icon-file   { background: rgba(107,114,128,0.08); }
+
+.file-info { flex: 1; min-width: 0; }
+.file-name {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--fg);
+}
+.file-meta {
+  font-size: 12px;
+  color: var(--fg-muted);
+  margin-top: 2px;
+}
+.file-arrow {
+  color: var(--fg-muted);
+  opacity: 0.5;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Loading state */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  color: var(--fg-muted);
+  gap: 16px;
+}
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--navy);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-state {
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--fg-muted);
+}
+.empty-state p { font-size: 14px; margin-top: 8px; }
+
+[hidden] { display: none !important; }
+</style>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo">HH</div>
+    <div>
+      <div class="header-title">Hope Hill Board Portal</div>
+      <div class="header-subtitle">Board Member Access</div>
+    </div>
+  </div>
+  <div class="header-actions" id="headerAuth" hidden>
+    <div class="user-chip">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <span id="userName" style="display:none"></span>
+    </div>
+    <button class="btn-ghost" onclick="signOut()">Sign out</button>
+  </div>
+</header>
+
+<!-- Sign-in screen -->
+<div class="signin-screen" id="signinScreen">
+  <div class="signin-card">
+    <div class="signin-emblem">HH</div>
+    <h1>Board Member Portal</h1>
+    <p>Sign in with your Microsoft account to access board meeting documents and materials.</p>
+    <button class="btn-primary" id="signinBtn" onclick="startSignIn()">
+      <svg class="ms-icon" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+        <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+        <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+        <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+      </svg>
+      Sign in with Microsoft
+    </button>
+    <div id="signinError" class="error-banner" hidden></div>
+    <div class="setup-notice">
+      <strong>Admin setup required:</strong> Register this page's URL as a redirect URI in the Entra app before signing in.<br>
+      <span class="redirect-url" id="redirectUriDisplay">loading…</span>
+    </div>
+  </div>
+</div>
+
+<!-- File browser -->
+<div class="main" id="browserScreen" hidden>
+  <nav class="breadcrumb" id="breadcrumb" aria-label="Folder navigation"></nav>
+  <div class="browser-header">
+    <div>
+      <div class="folder-title" id="folderTitle">Board Meetings</div>
+      <div class="item-count" id="itemCount"></div>
+    </div>
+  </div>
+  <div class="file-list" id="fileList">
+    <div class="loading"><div class="spinner"></div><span>Loading…</span></div>
+  </div>
+</div>
+
+<script>
+const C = {
+  tenantId:       'eb54fb2a-9c4d-4f07-9463-1aa2fb52fc65',
+  clientId:       '73e2d61a-bd9c-46c2-badf-72260d3bcc56',
+  siteUrl:        'https://bghomes.sharepoint.com/sites/Hopehill_Board',
+  rootFolderPath: '/sites/Hopehill_Board/Shared Documents/Board Meetings (Board Members)',
+  rootFolderName: 'Board Meetings',
+  scope:          'https://bghomes.sharepoint.com/AllSites.FullControl openid profile offline_access',
+};
+
+// Fixed redirect URI for GitHub Pages
+const REDIRECT_URI = 'https://hopehilladmin.github.io/board-portal/';
+document.getElementById('redirectUriDisplay').textContent = REDIRECT_URI;
+
+// ---- PKCE helpers ----
+function base64url(buf) {
+  return btoa(String.fromCharCode(...new Uint8Array(buf)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
+async function pkce() {
+  const verifier = base64url(crypto.getRandomValues(new Uint8Array(32)));
+  const challenge = base64url(await crypto.subtle.digest('SHA-256',
+    new TextEncoder().encode(verifier)));
+  return { verifier, challenge };
+}
+
+// ---- Token storage (sessionStorage) ----
+function saveToken(t)  { try { sessionStorage.setItem('bhp_token', JSON.stringify(t)); } catch{} }
+function loadToken()   { try { return JSON.parse(sessionStorage.getItem('bhp_token')); } catch { return null; } }
+function clearToken()  { try { sessionStorage.removeItem('bhp_token'); sessionStorage.removeItem('bhp_pkce'); } catch{} }
+function savePkce(v)   { try { sessionStorage.setItem('bhp_pkce', v); } catch{} }
+function loadPkce()    { try { return sessionStorage.getItem('bhp_pkce'); } catch { return null; } }
+
+// ---- Sign in ----
+async function startSignIn() {
+  const btn = document.getElementById('signinBtn');
+  btn.disabled = true;
+  btn.textContent = 'Redirecting…';
+  document.getElementById('signinError').hidden = true;
+
+  const { verifier, challenge } = await pkce();
+  savePkce(verifier);
+
+  const params = new URLSearchParams({
+    client_id:             C.clientId,
+    response_type:         'code',
+    redirect_uri:          REDIRECT_URI,
+    scope:                 C.scope,
+    code_challenge:        challenge,
+    code_challenge_method: 'S256',
+    response_mode:         'query',
+    prompt:                'select_account',
+  });
+  window.location.href =
+    `https://login.microsoftonline.com/${C.tenantId}/oauth2/v2.0/authorize?${params}`;
+}
+
+async function exchangeCode(code) {
+  const verifier = loadPkce();
+  if (!verifier) throw new Error('PKCE verifier missing. Please try signing in again.');
+
+  const body = new URLSearchParams({
+    client_id:     C.clientId,
+    grant_type:    'authorization_code',
+    code,
+    redirect_uri:  REDIRECT_URI,
+    code_verifier: verifier,
+    scope:         C.scope,
+  });
+
+  const res = await fetch(
+    `https://login.microsoftonline.com/${C.tenantId}/oauth2/v2.0/token`,
+    { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body }
+  );
+  const data = await res.json();
+  if (!res.ok || !data.access_token) {
+    throw new Error(data.error_description || data.error || 'Token exchange failed');
+  }
+  return data;
+}
+
+async function refreshToken(refreshTok) {
+  const body = new URLSearchParams({
+    client_id:     C.clientId,
+    grant_type:    'refresh_token',
+    refresh_token: refreshTok,
+    scope:         C.scope,
+  });
+  const res = await fetch(
+    `https://login.microsoftonline.com/${C.tenantId}/oauth2/v2.0/token`,
+    { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body }
+  );
+  const data = await res.json();
+  if (!res.ok || !data.access_token) throw new Error('Refresh failed');
+  return data;
+}
+
+async function getAccessToken() {
+  let tok = loadToken();
+  if (!tok) throw new Error('Not signed in');
+  // Refresh if expiring within 5 min
+  if (tok.refresh_token && tok.expires_at && Date.now() > tok.expires_at - 300000) {
+    try {
+      const fresh = await refreshToken(tok.refresh_token);
+      tok = { ...fresh, expires_at: Date.now() + (fresh.expires_in || 3600) * 1000 };
+      saveToken(tok);
+    } catch {}
+  }
+  return tok.access_token;
+}
+
+function signOut() {
+  clearToken();
+  window.location.href = window.location.origin + window.location.pathname;
+}
+
+function getUserInitials(name) {
+  if (!name) return '?';
+  return name.split(' ').filter(Boolean).map(w => w[0].toUpperCase()).slice(0,2).join('');
+}
+
+function showBrowser(userName) {
+  document.getElementById('signinScreen').hidden = true;
+  document.getElementById('browserScreen').hidden = false;
+  document.getElementById('headerAuth').hidden = false;
+  if (userName) {
+    document.getElementById('userAvatar').textContent = getUserInitials(userName);
+  }
+  navigateTo(C.rootFolderPath, []);
+}
+
+function showError(msg) {
+  const el = document.getElementById('signinError');
+  el.textContent = msg;
+  el.hidden = false;
+  const btn = document.getElementById('signinBtn');
+  btn.disabled = false;
+  btn.innerHTML = `<svg class="ms-icon" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>Sign in with Microsoft`;
+}
+
+// ---- OAuth callback handling ----
+async function handleCallback() {
+  const params = new URLSearchParams(window.location.search);
+  const code  = params.get('code');
+  const error = params.get('error');
+  const errDesc = params.get('error_description');
+
+  if (error) {
+    // Strip query string from URL
+    history.replaceState({}, '', window.location.pathname);
+    showError(`Sign-in error: ${errDesc || error}`);
+    return;
+  }
+
+  if (code) {
+    history.replaceState({}, '', window.location.pathname);
+    try {
+      const tok = await exchangeCode(code);
+      tok.expires_at = Date.now() + (tok.expires_in || 3600) * 1000;
+      saveToken(tok);
+
+      // Decode name from id_token
+      let name = '';
+      try {
+        const payload = JSON.parse(atob(tok.id_token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+        name = payload.name || payload.preferred_username || '';
+      } catch {}
+
+      showBrowser(name);
+    } catch(e) {
+      showError(e.message);
+    }
+    return;
+  }
+
+  // Check existing session
+  const existing = loadToken();
+  if (existing) {
+    let name = '';
+    try {
+      const payload = JSON.parse(atob(existing.id_token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+      name = payload.name || payload.preferred_username || '';
+    } catch {}
+    showBrowser(name);
+  }
+}
+
+// ---- SharePoint browsing ----
+let currentStack = []; // array of {path, name}
+
+async function navigateTo(folderPath, stack) {
+  currentStack = stack;
+  const folderName = stack.length === 0 ? C.rootFolderName : stack[stack.length - 1].name;
+  document.getElementById('folderTitle').textContent = folderName;
+  document.getElementById('itemCount').textContent = '';
+  renderBreadcrumb(folderPath);
+  showLoading();
+
+  try {
+    const token = await getAccessToken();
+    const enc = encodeURIComponent(folderPath);
+    const base = `${C.siteUrl}/_api/web/GetFolderByServerRelativeUrl('${enc}')`;
+
+    const [foldersRes, filesRes] = await Promise.all([
+      fetch(`${base}/Folders?$select=Name,ServerRelativeUrl&$orderby=Name`, {
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/json;odata=verbose' }
+      }),
+      fetch(`${base}/Files?$select=Name,ServerRelativeUrl,Length,TimeLastModified,LinkingUrl&$orderby=Name`, {
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/json;odata=verbose' }
+      })
+    ]);
+
+    if (!foldersRes.ok || !filesRes.ok) {
+      const errText = await (foldersRes.ok ? filesRes : foldersRes).text();
+      throw new Error(`SharePoint API error (${foldersRes.status || filesRes.status}): ${errText.slice(0,200)}`);
+    }
+
+    const foldersData = await foldersRes.json();
+    const filesData   = await filesRes.json();
+
+    const folders = (foldersData.d?.results || []).filter(f => f.Name !== 'Forms');
+    const files   = filesData.d?.results || [];
+
+    renderItems(folders, files, folderPath, stack);
+    document.getElementById('itemCount').textContent =
+      `${folders.length} folder${folders.length !== 1 ? 's' : ''}, ${files.length} file${files.length !== 1 ? 's' : ''}`;
+  } catch(e) {
+    showListError(e.message);
+  }
+}
+
+function renderBreadcrumb(currentPath) {
+  const bc = document.getElementById('breadcrumb');
+  bc.innerHTML = '';
+
+  const addSep = () => {
+    const s = document.createElement('span');
+    s.className = 'breadcrumb-sep';
+    s.textContent = '›';
+    bc.appendChild(s);
+  };
+
+  // Root always first
+  const rootBtn = document.createElement('button');
+  rootBtn.className = 'breadcrumb-item';
+  rootBtn.textContent = C.rootFolderName;
+  rootBtn.onclick = () => navigateTo(C.rootFolderPath, []);
+  bc.appendChild(rootBtn);
+
+  // Ancestors
+  for (let i = 0; i < currentStack.length; i++) {
+    addSep();
+    const item = currentStack[i];
+    const isLast = i === currentStack.length - 1;
+    if (isLast) {
+      const span = document.createElement('span');
+      span.className = 'breadcrumb-item breadcrumb-current';
+      span.textContent = item.name;
+      bc.appendChild(span);
+    } else {
+      const btn = document.createElement('button');
+      btn.className = 'breadcrumb-item';
+      btn.textContent = item.name;
+      const stackSlice = currentStack.slice(0, i + 1);
+      btn.onclick = () => navigateTo(item.path, stackSlice.slice(0, -1).concat([item]));
+      bc.appendChild(btn);
+    }
+  }
+}
+
+function fileIcon(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  if (ext === 'pdf') return { emoji: '📄', cls: 'icon-pdf' };
+  if (['doc','docx'].includes(ext)) return { emoji: '📝', cls: 'icon-word' };
+  if (['xls','xlsx'].includes(ext)) return { emoji: '📊', cls: 'icon-excel' };
+  if (['ppt','pptx'].includes(ext)) return { emoji: '📑', cls: 'icon-ppt' };
+  return { emoji: '📎', cls: 'icon-file' };
+}
+
+function formatBytes(b) {
+  if (!b) return '';
+  const n = parseInt(b);
+  if (n < 1024) return `${n} B`;
+  if (n < 1048576) return `${(n/1024).toFixed(0)} KB`;
+  return `${(n/1048576).toFixed(1)} MB`;
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  try {
+    return new Date(iso).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+  } catch { return ''; }
+}
+
+function renderItems(folders, files, folderPath, stack) {
+  const list = document.getElementById('fileList');
+  list.innerHTML = '';
+
+  if (folders.length === 0 && files.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div style="font-size:32px">📂</div><p>This folder is empty.</p></div>';
+    return;
+  }
+
+  // Folders first
+  folders.forEach(folder => {
+    const item = document.createElement('div');
+    item.className = 'file-item';
+    item.setAttribute('role', 'button');
+    item.setAttribute('tabindex', '0');
+    item.innerHTML = `
+      <div class="file-icon icon-folder">📁</div>
+      <div class="file-info">
+        <div class="file-name">${escHtml(folder.Name)}</div>
+      </div>
+      <span class="file-arrow">›</span>`;
+    const newStack = [...stack, { path: folder.ServerRelativeUrl, name: folder.Name }];
+    item.onclick = () => navigateTo(folder.ServerRelativeUrl, newStack);
+    item.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') navigateTo(folder.ServerRelativeUrl, newStack); };
+    list.appendChild(item);
+  });
+
+  // Files
+  files.forEach(file => {
+    const { emoji, cls } = fileIcon(file.Name);
+    const item = document.createElement('a');
+    item.className = 'file-item';
+    // Open via SharePoint link or construct one
+    const fileUrl = file.LinkingUrl || `${C.siteUrl}/_layouts/15/download.aspx?SourceUrl=${encodeURIComponent(file.ServerRelativeUrl)}`;
+    item.href = fileUrl;
+    item.target = '_blank';
+    item.rel = 'noopener noreferrer';
+    const size = formatBytes(file.Length);
+    const date = formatDate(file.TimeLastModified);
+    const meta = [size, date].filter(Boolean).join(' · ');
+    item.innerHTML = `
+      <div class="file-icon ${cls}">${emoji}</div>
+      <div class="file-info">
+        <div class="file-name">${escHtml(file.Name)}</div>
+        ${meta ? `<div class="file-meta">${escHtml(meta)}</div>` : ''}
+      </div>
+      <span class="file-arrow">↗</span>`;
+    list.appendChild(item);
+  });
+}
+
+function showLoading() {
+  document.getElementById('fileList').innerHTML =
+    '<div class="loading"><div class="spinner"></div><span>Loading…</span></div>';
+}
+
+function showListError(msg) {
+  document.getElementById('fileList').innerHTML =
+    `<div class="empty-state"><div style="font-size:32px">⚠️</div><p style="color:#991b1b">${escHtml(msg)}</p></div>`;
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ---- Init ----
+handleCallback();
+</script>
