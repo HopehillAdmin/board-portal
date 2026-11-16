@@ -502,9 +502,37 @@ async function pkce() {
 // ---- Token storage (sessionStorage) ----
 function saveToken(t)  { try { sessionStorage.setItem('bhp_token', JSON.stringify(t)); } catch{} }
 function loadToken()   { try { return JSON.parse(sessionStorage.getItem('bhp_token')); } catch { return null; } }
-function clearToken()  { try { sessionStorage.removeItem('bhp_token'); sessionStorage.removeItem('bhp_pkce'); } catch{} }
-function savePkce(v)   { try { sessionStorage.setItem('bhp_pkce', v); } catch{} }
-function loadPkce()    { try { return sessionStorage.getItem('bhp_pkce'); } catch { return null; } }
+function clearToken()  { try { sessionStorage.removeItem('bhp_token'); } catch{} }
+
+// The sign-in can return in a different tab (common on iPhone), so the verifier lives in
+// localStorage, keyed by the OAuth state value, and is removed as soon as it is used.
+const PKCE_KEY = 'bhp_pkce_pending';
+const PKCE_MAX_AGE = 15 * 60 * 1000;
+function readPending() {
+  try {
+    const all = JSON.parse(localStorage.getItem(PKCE_KEY)) || {};
+    for (const k in all) if (Date.now() - all[k].t > PKCE_MAX_AGE) delete all[k];
+    return all;
+  } catch { return {}; }
+}
+function savePkce(state, verifier) {
+  const all = readPending();
+  all[state] = { v: verifier, t: Date.now() };
+  try { localStorage.setItem(PKCE_KEY, JSON.stringify(all)); } catch {}
+  try { sessionStorage.setItem('bhp_pkce_' + state, verifier); } catch {}
+}
+function takePkce(state) {
+  if (!state) return null;
+  const all = readPending();
+  let verifier = all[state] ? all[state].v : null;
+  delete all[state];
+  try { localStorage.setItem(PKCE_KEY, JSON.stringify(all)); } catch {}
+  try {
+    verifier = verifier || sessionStorage.getItem('bhp_pkce_' + state);
+    sessionStorage.removeItem('bhp_pkce_' + state);
+  } catch {}
+  return verifier;
+}
 
 // ---- Sign in ----
 async function startSignIn() {
@@ -514,7 +542,8 @@ async function startSignIn() {
   document.getElementById('signinError').hidden = true;
 
   const { verifier, challenge } = await pkce();
-  savePkce(verifier);
+  const state = base64url(crypto.getRandomValues(new Uint8Array(16)));
+  savePkce(state, verifier);
 
   const params = new URLSearchParams({
     client_id:             C.clientId,
@@ -524,15 +553,16 @@ async function startSignIn() {
     code_challenge:        challenge,
     code_challenge_method: 'S256',
     response_mode:         'query',
+    state,
     prompt:                'select_account',
   });
   window.location.href =
     `https://login.microsoftonline.com/${C.tenantId}/oauth2/v2.0/authorize?${params}`;
 }
 
-async function exchangeCode(code) {
-  const verifier = loadPkce();
-  if (!verifier) throw new Error('PKCE verifier missing. Please try signing in again.');
+async function exchangeCode(code, state) {
+  const verifier = takePkce(state);
+  if (!verifier) throw new Error('Your sign-in expired or was started in another browser. Please tap Sign in again.');
 
   const body = new URLSearchParams({
     client_id:     C.clientId,
@@ -630,7 +660,7 @@ async function handleCallback() {
   if (code) {
     history.replaceState({}, '', window.location.pathname);
     try {
-      const tok = await exchangeCode(code);
+      const tok = await exchangeCode(code, params.get('state'));
       tok.expires_at = Date.now() + (tok.expires_in || 3600) * 1000;
       saveToken(tok);
 
